@@ -7,11 +7,12 @@
     "start": "ENV=PROD node app.js",
     "start-win": "set ENV=PROD&&node app.js",
     "test": "ENV=TEST jest",
+    "test-docker": "ENV=DOCKER jest",
     "test-watch": "ENV=DEV jest --watch",
     "test-win": "set ENV=DEV&&jest --watch",
     "test-coverage": "ENV=DEV jest --coverage",
     "test-coverage-win": "set SPACE=DEV&&jest --coverage",
-    "docker-test": "npm install && npm test",
+    "docker-test": "npm install && npm run test-docker",
     "docker-build": "docker build -t api-movies .",
     "docker-run": "docker run api-movies npm run docker-test"
   },
