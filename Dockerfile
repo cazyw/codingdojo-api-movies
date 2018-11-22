@@ -1,6 +1,10 @@
 FROM mhart/alpine-node:8
 
-COPY ./core/ /app/core
-COPY ./package.json /app
-
 WORKDIR /app
+COPY ./core/ /app/core
+COPY ./database/ /app/database
+COPY ./web/ /app/web
+COPY ./package.json /app/
+COPY ./jest.config.js /app/
+
+# EXPOSE 3000

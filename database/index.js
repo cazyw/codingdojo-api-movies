@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const db = process.env.ENV || 'PROD';
-const databaseUrl = `mongodb://localhost:27017/movieDatabase-${db}`;
+const hostName = process.env.ENV === 'DOCKER' ? 'mongo' : 'localhost';
+const databaseUrl = `mongodb://${hostName}:27017/movieDatabase-${db}`;
 
 mongoose.connection.on('connected', () => {
   console.log(`Mongoose connected to ${databaseUrl}`); // eslint-disable-line no-console
