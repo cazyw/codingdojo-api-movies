@@ -1,0 +1,30 @@
+{
+  "name": "api-node-imdb",
+  "version": "1.0.0",
+  "description": "Sydney Coding Dojo TDD Exercise",
+  "main": "app.js",
+  "scripts": {
+    "start": "ENV=PROD node app.js",
+    "start-win": "set ENV=PROD&&node app.js",
+    "test": "ENV=TEST jest",
+    "test-watch": "ENV=DEV jest --watch",
+    "test-win": "set ENV=DEV&&jest --watch",
+    "test-coverage": "ENV=DEV jest --coverage",
+    "test-coverage-win": "set SPACE=DEV&&jest --coverage",
+    "docker-test": "npm install && npm test",
+    "docker-build": "docker build -t api-movies .",
+    "docker-run": "docker run api-movies npm run docker-test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "eslint": "^5.6.0",
+    "jest": "^23.6.0",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "mongoose": "^5.3.2"
+  }
+}
