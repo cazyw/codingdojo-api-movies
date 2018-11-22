@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     links:
-      - mongo-1
+      - mongo
   mongo:
     container_name: mongo-1
     image: mongo
