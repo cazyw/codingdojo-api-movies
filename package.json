@@ -7,14 +7,15 @@
     "start": "ENV=PROD node app.js",
     "start-win": "set ENV=PROD&&node app.js",
     "test": "ENV=TEST jest",
-    "test-docker": "ENV=DOCKER jest",
+    "test-docker": "ENV=DOCKER jest --detectOpenHandles",
     "test-watch": "ENV=DEV jest --watch",
     "test-win": "set ENV=DEV&&jest --watch",
     "test-coverage": "ENV=DEV jest --coverage",
     "test-coverage-win": "set SPACE=DEV&&jest --coverage",
     "docker-test": "npm install && npm run test-docker",
     "docker-build": "docker build -t api-movies .",
-    "docker-run": "docker run api-movies npm run docker-test"
+    "docker-run": "docker run api-movies npm run docker-test",
+    "docker-agent": "docker run -v /var/run/docker.sock:/var/run/docker.sock -e BUILDKITE_AGENT_TOKEN=\"e35d5716c3213c6cc2ebb773ea9e25614f0c6870372f013557\" buildkite/agent"
   },
   "author": "",
   "license": "ISC",
