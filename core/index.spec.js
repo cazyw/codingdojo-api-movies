@@ -1,137 +1,75 @@
-const { createMovie, getMovies, getAMovie } = require('./index');
+const createMovie = require("./index");
 
-describe('Create Movie', () => {
-  it('Should return an error if the title is blank', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {},
+describe("Create movie", () => {
+  it("Requires movie with a title", async () => {
+    const fakeDatabase = {
+      getAll: () => {},
       saveMovie: () => {}
     };
-    const title = '';
-    const description = 'a long time ago in a galaxy far far away...';
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(title, description)).toBe('Input Error: Movie title is required');
-    expect(spySaveMovie).not.toHaveBeenCalled();
-  });
-
-  it('Should return an error if the description is blank', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {},
-      saveMovie: () => {}
-    };
-    const title = 'Star Wars';
-    const description = '';
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(title, description)).toBe('Input Error: Movie description is required');
-    expect(spySaveMovie).not.toHaveBeenCalled();
-  });
-
-  it('Should return an error if both the title and description is blank', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {},
-      saveMovie: () => {}
-    };
-    const title = '';
-    const description = '';
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(title, description)).toBe(
-      'Input Error: Movie title and description is required'
+    const title = "";
+    const description = "some description here";
+    const fakeDatabaseSaveMovie = jest.spyOn(fakeDatabase, "saveMovie");
+    expect(await createMovie(fakeDatabase)(title, description)).toBe(
+      "Movie title was required"
     );
-    expect(spySaveMovie).not.toHaveBeenCalled();
+    expect(fakeDatabaseSaveMovie).not.toHaveBeenCalled();
   });
 
-  it('Should return an error if the movie title already exists in the database', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {
-        return [
-          { id: 1, title: 'Avengers', description: 'together we stand, divided we fall' },
-          { id: 2, title: 'Star Wars', description: 'a long time ago in a galaxy far far away...' },
-          { id: 3, title: 'Jurrasic World', description: 'life finds a way' }
-        ];
-      },
+  it("Requires movie with a description", async () => {
+    const fakeDatabase = {
+      getAll: () => {},
       saveMovie: () => {}
     };
-
-    const title = 'Star Wars';
-    const description = 'a long time ago in a galaxy far far away...';
-    const spyGetAllMovies = jest.spyOn(mockDatabase, 'getAllMovies');
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(title, description)).toBe('Duplicate Error: Movie already exists');
-    expect(spyGetAllMovies).toHaveBeenCalledTimes(1);
-    expect(spySaveMovie).not.toHaveBeenCalled();
+    const title = "Star Wars";
+    const description = "";
+    const fakeDatabaseSaveMovie = jest.spyOn(fakeDatabase, "saveMovie");
+    expect(await createMovie(fakeDatabase)(title, description)).toBe(
+      "Movie description was required"
+    );
+    expect(fakeDatabaseSaveMovie).not.toHaveBeenCalled();
   });
 
-  it('Should ignore spaces at the beginning and end of the movie title', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {
+  it("Requires movie with a title and a description", async () => {
+    const title = "";
+    const description = "";
+    expect(await createMovie()(title, description)).toBe(
+      "Movie title and description was required"
+    );
+  });
+
+  it("Should not have duplicate movie name", async () => {
+    const fakeDatabase = {
+      getAll: () => {
         return [
-          { id: 1, title: 'Avengers', description: 'together we stand, divided we fall' },
-          { id: 2, title: 'Star Wars', description: 'a long time ago in a galaxy far far away...' },
-          { id: 3, title: 'Jurrasic World', description: 'life finds a way' }
+          { title: "DespicableMe", description: "Comedy" },
+          { title: "DespicableMe2", description: "Comedy" },
+          { title: "DespicableMe3", description: "Comedy" }
         ];
-      },
-      saveMovie: () => {}
+      }
     };
-
-    const title = ' Star Wars ';
-    const description = 'a long time ago in a galaxy far far away...';
-    const spyGetAllMovies = jest.spyOn(mockDatabase, 'getAllMovies');
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(title, description)).toBe('Duplicate Error: Movie already exists');
-    expect(spyGetAllMovies).toHaveBeenCalledTimes(1);
-    expect(spySaveMovie).not.toHaveBeenCalled();
+    expect(await createMovie(fakeDatabase)("DespicableMe", "Comedy")).toBe(
+      "Movie name is duplicate."
+    );
   });
 
-  it('Should save the movie if the input is valid', async () => {
-    const mockDatabase = {
-      getAllMovies: () => [],
+  it("Saves a valid movie", async () => {
+    const fakeDatabase = {
+      getAll: () => ([]),
       saveMovie: () => {
         return {
-          title: 'Star Wars',
-          description: 'a long time ago in a galaxy far far away...'
+          title: "DespicableMe2",
+          description: "Comedy"
         };
       }
     };
+    const fakeDatabaseSaveMovie = jest.spyOn(fakeDatabase, "saveMovie");
 
     const movie = {
-      title: 'Star Wars',
-      description: 'a long time ago in a galaxy far far away...'
-    };
+      title: "DespicableMe2",
+      description: "Comedy"
+    }
 
-    const spySaveMovie = jest.spyOn(mockDatabase, 'saveMovie');
-    expect(await createMovie(mockDatabase)(movie.title, movie.description)).toEqual(movie);
-    expect(spySaveMovie).toHaveBeenCalledTimes(1);
-    expect(spySaveMovie).toHaveBeenCalledWith(movie.title, movie.description);
-  });
-});
-
-describe('Get All Movies', () => {
-  it('Should get all movies', async () => {
-    const mockDatabase = {
-      getAllMovies: () => {
-        return [
-          { id: 1, title: 'Avengers', description: 'together we stand, divided we fall' },
-          { id: 2, title: 'Star Wars', description: 'a long time ago in a galaxy far far away...' },
-          { id: 3, title: 'Jurrasic World', description: 'life finds a way' }
-        ];
-      }
-    };
-    const spyGetAllMovies = jest.spyOn(mockDatabase, 'getAllMovies');
-    const movies = await getMovies(mockDatabase)();
-    expect(movies.length).toBe(3);
-    expect(spyGetAllMovies).toHaveBeenCalledTimes(1);
-  });
-});
-
-describe('Get A Movie', () => {
-  it('Should get a movie given a title', async () => {
-    const mockDatabase = {
-      getAMovie: title => {
-        return { id: 1, title: 'Avengers', description: 'together we stand, divided we fall' };
-      }
-    };
-    const spyGetAMovie = jest.spyOn(mockDatabase, 'getAMovie');
-    const movie = await getAMovie(mockDatabase)('Avengers');
-    expect(movie.title).toBe('Avengers');
-    expect(spyGetAMovie).toHaveBeenCalledTimes(1);
+    expect(await createMovie(fakeDatabase)(movie.title, movie.description)).toEqual(movie);
+    expect(fakeDatabaseSaveMovie).toHaveBeenCalledWith(movie.title, movie.description);
   });
 });
