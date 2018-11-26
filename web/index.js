@@ -1,38 +1,19 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { createMovie, getMovies, getAMovie } = require('../core');
 const db = require('../database');
-
+const core = require('../core');
+var bodyParser = require('body-parser');
 const app = express();
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-  res.status(200).send('Welcome');
-});
+app.post('/movie', async function(req, res) {
+	const error = await core(db)(req.body.title, req.body.description);
 
-app.get('/movie', async (req, res) => {
-  const result = await getAMovie(db.database)(req.query.title);
-  if (result) {
-    return res.status(200).send(result);
-  }
-  res.status(302).send('Movie not found');
-});
+	if (error) {
+		return res.status(400).send(error);
+	}
 
-app.get('/movies', async (req, res) => {
-  const result = await getMovies(db.database)();
-  if (result) {
-    return res.status(200).send(result);
-  }
-  res.status(302).send();
-});
-
-app.post('/movie', async (req, res) => {
-  const result = await createMovie(db.database)(req.body.title, req.body.description);
-  if (result) {
-    return res.status(400).send(result);
-  }
-  res.status(200).send(result);
+  res.status(201).json({ title: req.body.title, description: req.body.description });
 });
 
 module.exports = app;

@@ -6,5 +6,3 @@ COPY ./database/ /app/database
 COPY ./web/ /app/web
 COPY ./package.json /app/
 COPY ./jest.config.js /app/
-
-# EXPOSE 3000
