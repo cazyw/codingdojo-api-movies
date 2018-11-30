@@ -1,3 +1,6 @@
+# Muses Code JS Coding Dojo Exercise
+
+Session run in 2018 Q4.
 This is a Kata which aims at developing a Node API for creating a personal Movie Database using Test Driven Development[TDD] approach
 
 ## Requirements
